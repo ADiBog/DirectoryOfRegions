@@ -1,0 +1,1 @@
+INSERT INTO regions (name, short_name) VALUES ('Московская область', 'МО');
