@@ -2,7 +2,6 @@ package com.example.directoryofregions.controller;
 
 import com.example.directoryofregions.dto.RegionDto;
 import com.example.directoryofregions.service.RegionService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,7 +12,6 @@ public class RegionController {
 
     private final RegionService regionService;
 
-    @Autowired
     public RegionController(RegionService regionService) {
         this.regionService = regionService;
     }

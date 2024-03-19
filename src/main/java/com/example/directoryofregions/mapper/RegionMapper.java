@@ -1,9 +1,7 @@
 package com.example.directoryofregions.mapper;
 
-import com.example.directoryofregions.dto.RegionDto;
 import com.example.directoryofregions.model.Region;
 import org.apache.ibatis.annotations.*;
-import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 

@@ -4,7 +4,6 @@ import com.example.directoryofregions.dto.RegionDto;
 import com.example.directoryofregions.mapper.RegionMapper;
 import com.example.directoryofregions.mapper.RegionMapperDto;
 import com.example.directoryofregions.model.Region;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -18,7 +17,6 @@ public class RegionService {
 
     private final RegionMapper regionMapper;
 
-    @Autowired
     public RegionService(RegionMapper regionMapper) {
         this.regionMapper = regionMapper;
     }
