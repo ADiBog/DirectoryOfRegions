@@ -13,4 +13,10 @@ public class GlobalExceptionHandler {
         // Возвращаем ответ клиенту с сообщением об ошибке и статусом конфликта
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGlobalException(Exception ex) {
+        // Возвращаем ответ клиенту с сообщением об ошибке и статусом внутренней ошибки сервера
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+    }
 }
