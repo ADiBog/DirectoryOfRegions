@@ -19,16 +19,19 @@ import java.util.stream.Collectors;
 public class RegionService {
 
     private final RegionMapper regionMapper;
+    private final RegionMapperDto regionMapperDto;
     private static final Logger logger = LoggerFactory.getLogger(RegionService.class);
 
-    public RegionService(RegionMapper regionMapper) {
+    public RegionService(RegionMapper regionMapper, RegionMapperDto regionMapperDto) {
         this.regionMapper = regionMapper;
+        this.regionMapperDto = regionMapperDto;
     }
 
     @Cacheable(value = "regions")
     public List<RegionDto> findAll() {
-        List<RegionDto> regions = regionMapper.findAll().stream()
-                .map(RegionMapperDto.INSTANCE::toDto)
+        List<RegionDto> regions = regionMapper.findAll()
+                .stream()
+                .map(regionMapperDto::toDto)
                 .collect(Collectors.toList());
         logger.info("Все регионы успешно получены. Количество регионов: {}", regions.size());
         return regions;
@@ -38,16 +41,15 @@ public class RegionService {
     public RegionDto findById(Long id) {
         Region region = regionMapper.findById(id);
         logger.info("Регион с ID {} успешно найден: {}", id, region.getName());
-        return RegionMapperDto.INSTANCE.toDto(region);
+        return regionMapperDto.toDto(region);
     }
 
     @CacheEvict(value = "regions", allEntries = true)
     public void insert(RegionDto regionDto) {
-        // Проверка на null значений name и shortName
         if (regionDto.getName() == null || regionDto.getShortName() == null) {
             throw new IllegalArgumentException("Имя региона и сокращенное имя не могут быть null");
         }
-        Region region = RegionMapperDto.INSTANCE.toEntity(regionDto);
+        Region region = regionMapperDto.toEntity(regionDto);
         int existingRegionsCount = regionMapper.countByNameOrShortName(region.getName(), region.getShortName());
         if (existingRegionsCount > 0) {
             throw new RegionExistsException("Регион с таким наименованием или сокращенным наименованием уже существует");
@@ -59,7 +61,7 @@ public class RegionService {
     @CachePut(value = "region", key = "#regionDto.id")
     @CacheEvict(value = "regions", allEntries = true)
     public void update(RegionDto regionDto) {
-        Region region = RegionMapperDto.INSTANCE.toEntity(regionDto);
+        Region region = regionMapperDto.toEntity(regionDto);
         regionMapper.update(region);
         logger.info("Регион с ID {} успешно обновлён. Новое наименование: {}", region.getId(), region.getName());
     }
