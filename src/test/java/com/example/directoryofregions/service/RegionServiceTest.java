@@ -1,6 +1,7 @@
 package com.example.directoryofregions.service;
 
 import com.example.directoryofregions.dto.RegionDto;
+import com.example.directoryofregions.exception.RecordNotFoundException;
 import com.example.directoryofregions.exception.RegionExistsException;
 import com.example.directoryofregions.mapper.RegionMapper;
 import com.example.directoryofregions.mapper.RegionMapperDto;
@@ -113,9 +114,21 @@ class RegionServiceTest {
     }
 
     @Test
-    void deleteShouldRemoveTheRegion() {
+    void deleteShouldThrowExceptionWhenRecordNotFound() {
         // GIVEN
         Long idToDelete = 1L;
+        when(regionMapper.findById(idToDelete)).thenReturn(null);
+
+        // WHEN & THEN
+        assertThrows(RecordNotFoundException.class, () -> regionService.delete(idToDelete));
+    }
+
+    @Test
+    void deleteShouldRemoveTheRegionWhenFound() {
+        // GIVEN
+        Long idToDelete = 1L;
+        Region mockRegion = new Region();
+        when(regionMapper.findById(idToDelete)).thenReturn(mockRegion);
 
         // WHEN
         regionService.delete(idToDelete);
