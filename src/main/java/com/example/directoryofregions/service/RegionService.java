@@ -37,7 +37,7 @@ public class RegionService {
     @Cacheable(value = "region", key = "#id")
     public RegionDto findById(Long id) {
         Region region = regionMapper.findById(id);
-        logger.info("Регион с ID {} успешно найден.", id);
+        logger.info("Регион с ID {} успешно найден: {}", id, region.getName());
         return RegionMapperDto.INSTANCE.toDto(region);
     }
 
@@ -57,7 +57,7 @@ public class RegionService {
     public void update(RegionDto regionDto) {
         Region region = RegionMapperDto.INSTANCE.toEntity(regionDto);
         regionMapper.update(region);
-        logger.info("Регион с ID {} успешно обновлён.", region.getId());
+        logger.info("Регион с ID {} успешно обновлён. Новое наименование: {}", region.getId(), region.getName());
     }
 
     @CacheEvict(value = {"regions", "region"}, allEntries = true, key = "#id")
