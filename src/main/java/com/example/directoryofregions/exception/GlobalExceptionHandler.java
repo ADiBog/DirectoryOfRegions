@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(RecordNotFoundException.class)
-    public ResponseEntity<ApiError> handleRegionExistsException(RecordNotFoundException ex) {
+    public ResponseEntity<ApiError> handleRecordNotFoundException(RecordNotFoundException ex) {
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, "Запись отсутствует: " + ex.getMessage());
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
