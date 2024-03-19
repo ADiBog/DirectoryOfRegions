@@ -1,7 +1,7 @@
 package com.example.directoryofregions.mapper;
 
 import com.example.directoryofregions.dto.RegionDto;
-import com.example.directoryofregions.model.Region;
+import com.example.directoryofregions.entity.Region;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

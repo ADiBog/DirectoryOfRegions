@@ -1,4 +1,4 @@
-package com.example.directoryofregions.model;
+package com.example.directoryofregions.entity;
 
 import jakarta.persistence.*;
 

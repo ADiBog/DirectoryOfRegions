@@ -1,6 +1,6 @@
 package com.example.directoryofregions.mapper;
 
-import com.example.directoryofregions.model.Region;
+import com.example.directoryofregions.entity.Region;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

@@ -4,7 +4,7 @@ import com.example.directoryofregions.dto.RegionDto;
 import com.example.directoryofregions.exception.RegionExistsException;
 import com.example.directoryofregions.mapper.RegionMapper;
 import com.example.directoryofregions.mapper.RegionMapperDto;
-import com.example.directoryofregions.model.Region;
+import com.example.directoryofregions.entity.Region;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;

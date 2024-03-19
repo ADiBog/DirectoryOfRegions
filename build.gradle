@@ -19,14 +19,22 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-cache'
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.mapstruct:mapstruct:1.4.2.Final'
+	implementation 'org.junit.jupiter:junit-jupiter:5.8.2' // Обновлено до последней версии
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
-    runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'com.h2database:h2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
+	// JUnit Jupiter (JUnit 5) для модульных тестов
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+	// Mockito для мокирования в тестах
+	testImplementation 'org.mockito:mockito-core:4.5.1'
+	testImplementation 'org.mockito:mockito-junit-jupiter:4.5.1'
+	implementation 'org.reactivestreams:reactive-streams:1.0.3'
 }
 
-tasks.named('test') {
+test {
 	useJUnitPlatform()
 }
