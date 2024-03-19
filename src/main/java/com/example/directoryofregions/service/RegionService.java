@@ -1,7 +1,8 @@
 package com.example.directoryofregions.service;
 
-
+import com.example.directoryofregions.dto.RegionDto;
 import com.example.directoryofregions.mapper.RegionMapper;
+import com.example.directoryofregions.mapper.RegionMapperDto;
 import com.example.directoryofregions.model.Region;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -10,6 +11,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RegionService {
@@ -22,17 +24,22 @@ public class RegionService {
     }
 
     @Cacheable(value = "regions")
-    public List<Region> findAll() {
-        return regionMapper.findAll();
+    public List<RegionDto> findAll() {
+        return regionMapper.findAll().stream()
+                .map(RegionMapperDto.INSTANCE::toDto)
+                .collect(Collectors.toList());
     }
 
     @Cacheable(value = "region", key = "#id")
-    public Region findById(Long id) {
-        return regionMapper.findById(id);
+    public RegionDto findById(Long id) {
+        Region region = regionMapper.findById(id);
+        return RegionMapperDto.INSTANCE.toDto(region);
     }
 
     @CacheEvict(value = "regions", allEntries = true)
-    public void insert(Region region) {
+    public void insert(RegionDto regionDto) {
+        // Преобразование DTO в сущность
+        Region region = RegionMapperDto.INSTANCE.toEntity(regionDto);
         // Проверка на существование региона перед добавлением
         int existingRegionsCount = regionMapper.countByNameOrShortName(region.getName(), region.getShortName());
         if (existingRegionsCount > 0) {
@@ -41,9 +48,11 @@ public class RegionService {
         regionMapper.insert(region);
     }
 
-    @CachePut(value = "region", key = "#region.id")
+    @CachePut(value = "region", key = "#regionDto.id")
     @CacheEvict(value = "regions", allEntries = true)
-    public void update(Region region) {
+    public void update(RegionDto regionDto) {
+        // Преобразование DTO в сущность для обновления
+        Region region = RegionMapperDto.INSTANCE.toEntity(regionDto);
         regionMapper.update(region);
     }
 
@@ -51,7 +60,4 @@ public class RegionService {
     public void delete(Long id) {
         regionMapper.delete(id);
     }
-
-
 }
-

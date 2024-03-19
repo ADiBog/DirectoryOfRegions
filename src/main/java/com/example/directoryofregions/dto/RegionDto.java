@@ -1,26 +1,18 @@
-package com.example.directoryofregions.model;
+package com.example.directoryofregions.dto;
 
-import jakarta.persistence.*;
-
-@Entity
-public class Region {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class RegionDto {
     private Long id;
     private String name;
     private String shortName;
 
-    // Добавляем конструктор по умолчанию
-    public Region() {
-    }
-
-    // Добавляем конструктор с параметрами
-    public Region(Long id, String name, String shortName) {
+    // Конструктор
+    public RegionDto(Long id, String name, String shortName) {
         this.id = id;
         this.name = name;
         this.shortName = shortName;
     }
 
+    // Геттеры и сеттеры
     public Long getId() {
         return id;
     }
@@ -45,3 +37,4 @@ public class Region {
         this.shortName = shortName;
     }
 }
+

@@ -1,6 +1,6 @@
 package com.example.directoryofregions.controller;
 
-import com.example.directoryofregions.model.Region;
+import com.example.directoryofregions.dto.RegionDto;
 import com.example.directoryofregions.service.RegionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,24 +19,25 @@ public class RegionController {
     }
 
     @GetMapping
-    public List<Region> getAllRegions() {
+    public List<RegionDto> getAllRegions() {
         return regionService.findAll();
     }
 
     @GetMapping("/{id}")
-    public Region getRegionById(@PathVariable Long id) {
+    public RegionDto getRegionById(@PathVariable Long id) {
         return regionService.findById(id);
     }
 
     @PostMapping
-    public void createRegion(@RequestBody Region region) {
-        regionService.insert(region);
+    public void createRegion(@RequestBody RegionDto regionDto) {
+        regionService.insert(regionDto);
     }
 
     @PutMapping("/{id}")
-    public void updateRegion(@PathVariable Long id, @RequestBody Region region) {
-        region.setId(id);
-        regionService.update(region);
+    public void updateRegion(@PathVariable Long id, @RequestBody RegionDto regionDto) {
+        // Установка ID необходима, если в DTO не предусмотрено поле ID или оно не установлено
+        regionDto.setId(id);
+        regionService.update(regionDto);
     }
 
     @DeleteMapping("/{id}")
