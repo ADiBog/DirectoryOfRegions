@@ -1,9 +1,12 @@
 package com.example.directoryofregions.service;
 
 import com.example.directoryofregions.dto.RegionDto;
+import com.example.directoryofregions.exception.RegionExistsException;
 import com.example.directoryofregions.mapper.RegionMapper;
 import com.example.directoryofregions.mapper.RegionMapperDto;
 import com.example.directoryofregions.model.Region;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -16,6 +19,7 @@ import java.util.stream.Collectors;
 public class RegionService {
 
     private final RegionMapper regionMapper;
+    private static final Logger logger = LoggerFactory.getLogger(RegionService.class);
 
     public RegionService(RegionMapper regionMapper) {
         this.regionMapper = regionMapper;
@@ -23,39 +27,42 @@ public class RegionService {
 
     @Cacheable(value = "regions")
     public List<RegionDto> findAll() {
-        return regionMapper.findAll().stream()
+        List<RegionDto> regions = regionMapper.findAll().stream()
                 .map(RegionMapperDto.INSTANCE::toDto)
                 .collect(Collectors.toList());
+        logger.info("Все регионы успешно получены. Количество регионов: {}", regions.size());
+        return regions;
     }
 
     @Cacheable(value = "region", key = "#id")
     public RegionDto findById(Long id) {
         Region region = regionMapper.findById(id);
+        logger.info("Регион с ID {} успешно найден.", id);
         return RegionMapperDto.INSTANCE.toDto(region);
     }
 
     @CacheEvict(value = "regions", allEntries = true)
     public void insert(RegionDto regionDto) {
-        // Преобразование DTO в сущность
         Region region = RegionMapperDto.INSTANCE.toEntity(regionDto);
-        // Проверка на существование региона перед добавлением
         int existingRegionsCount = regionMapper.countByNameOrShortName(region.getName(), region.getShortName());
         if (existingRegionsCount > 0) {
-            throw new IllegalArgumentException("Регион с таким наименованием или сокращенным наименованием уже существует");
+            throw new RegionExistsException("Регион с таким наименованием или сокращенным наименованием уже существует");
         }
         regionMapper.insert(region);
+        logger.info("Регион с наименованием {} успешно добавлен.", region.getName());
     }
 
     @CachePut(value = "region", key = "#regionDto.id")
     @CacheEvict(value = "regions", allEntries = true)
     public void update(RegionDto regionDto) {
-        // Преобразование DTO в сущность для обновления
         Region region = RegionMapperDto.INSTANCE.toEntity(regionDto);
         regionMapper.update(region);
+        logger.info("Регион с ID {} успешно обновлён.", region.getId());
     }
 
     @CacheEvict(value = {"regions", "region"}, allEntries = true, key = "#id")
     public void delete(Long id) {
         regionMapper.delete(id);
+        logger.info("Регион с ID {} успешно удалён.", id);
     }
 }
