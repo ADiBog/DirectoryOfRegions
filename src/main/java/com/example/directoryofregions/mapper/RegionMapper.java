@@ -24,4 +24,7 @@ public interface RegionMapper {
 
     @Delete("DELETE FROM regions WHERE id = #{id}")
     void delete(@Param("id") Long id);
+
+    @Select("SELECT COUNT(*) FROM regions WHERE name = #{name} OR short_name = #{shortName}")
+    int countByNameOrShortName(@Param("name") String name, @Param("shortName") String shortName);
 }

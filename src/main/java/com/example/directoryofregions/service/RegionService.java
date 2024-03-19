@@ -33,6 +33,11 @@ public class RegionService {
 
     @CacheEvict(value = "regions", allEntries = true)
     public void insert(Region region) {
+        // Проверка на существование региона перед добавлением
+        int existingRegionsCount = regionMapper.countByNameOrShortName(region.getName(), region.getShortName());
+        if (existingRegionsCount > 0) {
+            throw new IllegalArgumentException("Регион с таким наименованием или сокращенным наименованием уже существует");
+        }
         regionMapper.insert(region);
     }
 
@@ -46,5 +51,7 @@ public class RegionService {
     public void delete(Long id) {
         regionMapper.delete(id);
     }
+
+
 }
 
