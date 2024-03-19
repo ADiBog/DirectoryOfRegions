@@ -8,15 +8,22 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(RegionExistsException.class)
-    public ResponseEntity<String> handleRegionExistsException(RegionExistsException ex) {
-        // Возвращаем ответ клиенту с сообщением об ошибке и статусом конфликта
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiError> handleGlobalException(Exception ex) {
+        ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "РџСЂРѕРёР·РѕС€Р»Р° РЅРµРїСЂРµРґРІРёРґРµРЅРЅР°СЏ РѕС€РёР±РєР°:: " + ex.getMessage());
+        return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleGlobalException(Exception ex) {
-        // Возвращаем ответ клиенту с сообщением об ошибке и статусом внутренней ошибки сервера
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+    @ExceptionHandler(RegionExistsException.class)
+    public ResponseEntity<ApiError> handleRegionExistsException(RegionExistsException ex) {
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, "Р РµРіРёРѕРЅ СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚: " + ex.getMessage());
+        return new ResponseEntity<>(apiError, apiError.getStatus());
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiError> handleIllegalArgumentException(IllegalArgumentException ex) {
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, "РќРµРІРµСЂРЅС‹Р№ Р°СЂРіСѓРјРµРЅС‚: " + ex.getMessage());
+        return new ResponseEntity<>(apiError, apiError.getStatus());
+    }
+
 }

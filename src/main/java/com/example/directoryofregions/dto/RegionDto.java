@@ -5,14 +5,12 @@ public class RegionDto {
     private String name;
     private String shortName;
 
-    // Конструктор
     public RegionDto(Long id, String name, String shortName) {
         this.id = id;
         this.name = name;
         this.shortName = shortName;
     }
 
-    // Геттеры и сеттеры
     public Long getId() {
         return id;
     }

@@ -43,6 +43,10 @@ public class RegionService {
 
     @CacheEvict(value = "regions", allEntries = true)
     public void insert(RegionDto regionDto) {
+        // Проверка на null значений name и shortName
+        if (regionDto.getName() == null || regionDto.getShortName() == null) {
+            throw new IllegalArgumentException("Имя региона и сокращенное имя не могут быть null");
+        }
         Region region = RegionMapperDto.INSTANCE.toEntity(regionDto);
         int existingRegionsCount = regionMapper.countByNameOrShortName(region.getName(), region.getShortName());
         if (existingRegionsCount > 0) {

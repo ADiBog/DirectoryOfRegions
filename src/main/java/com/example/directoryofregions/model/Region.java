@@ -10,11 +10,9 @@ public class Region {
     private String name;
     private String shortName;
 
-    // ƒобавл€ем конструктор по умолчанию
     public Region() {
     }
 
-    // ƒобавл€ем конструктор с параметрами
     public Region(Long id, String name, String shortName) {
         this.id = id;
         this.name = name;

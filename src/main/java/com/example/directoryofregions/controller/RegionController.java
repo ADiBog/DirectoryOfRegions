@@ -33,7 +33,6 @@ public class RegionController {
 
     @PutMapping("/{id}")
     public void updateRegion(@PathVariable Long id, @RequestBody RegionDto regionDto) {
-        // Установка ID необходима, если в DTO не предусмотрено поле ID или оно не установлено
         regionDto.setId(id);
         regionService.update(regionDto);
     }
