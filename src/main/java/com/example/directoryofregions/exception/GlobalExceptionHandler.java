@@ -20,6 +20,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 
+    @ExceptionHandler(RecordNotFoundException.class)
+    public ResponseEntity<ApiError> handleRegionExistsException(RecordNotFoundException ex) {
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, "Запись отсутствует: " + ex.getMessage());
+        return new ResponseEntity<>(apiError, apiError.getStatus());
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiError> handleIllegalArgumentException(IllegalArgumentException ex) {
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, "Неверный аргумент: " + ex.getMessage());

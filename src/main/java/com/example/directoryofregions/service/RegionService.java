@@ -1,10 +1,11 @@
 package com.example.directoryofregions.service;
 
 import com.example.directoryofregions.dto.RegionDto;
+import com.example.directoryofregions.entity.Region;
+import com.example.directoryofregions.exception.RecordNotFoundException;
 import com.example.directoryofregions.exception.RegionExistsException;
 import com.example.directoryofregions.mapper.RegionMapper;
 import com.example.directoryofregions.mapper.RegionMapperDto;
-import com.example.directoryofregions.entity.Region;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
@@ -40,6 +41,10 @@ public class RegionService {
     @Cacheable(value = "region", key = "#id")
     public RegionDto findById(Long id) {
         Region region = regionMapper.findById(id);
+        if (region == null) {
+            logger.error("Регион с ID {} не найден.", id);
+            throw new RecordNotFoundException("Регион с ID " + id + " не найден.");
+        }
         logger.info("Регион с ID {} успешно найден: \"{}\"", id, region.getName());
         return regionMapperDto.toDto(region);
     }
@@ -68,6 +73,12 @@ public class RegionService {
 
     @CacheEvict(value = {"regions", "region"}, allEntries = true, key = "#id")
     public void delete(Long id) {
+        Region region = regionMapper.findById(id);
+        if (region == null) {
+            logger.error("Регион с ID {} не найден.", id);
+            throw new RecordNotFoundException("Регион с ID " + id + " не найден.");
+        }
+
         regionMapper.delete(id);
         logger.info("Регион с ID {} успешно удалён.", id);
     }
