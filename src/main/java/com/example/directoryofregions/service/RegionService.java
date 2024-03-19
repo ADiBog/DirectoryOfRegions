@@ -66,10 +66,22 @@ public class RegionService {
     @CachePut(value = "region", key = "#regionDto.id")
     @CacheEvict(value = "regions", allEntries = true)
     public void update(RegionDto regionDto) {
+        // Проверяем, существует ли регион с таким ID
+        Region existingRegion = regionMapper.findById(regionDto.getId());
+        if (existingRegion == null) {
+            // Если регион не найден, выбрасываем исключение
+            throw new RecordNotFoundException("Регион с ID " + regionDto.getId() + " не найден.");
+        }
+
+        // Преобразование DTO в сущность
         Region region = regionMapperDto.toEntity(regionDto);
+
+        // Обновление региона
         regionMapper.update(region);
+
         logger.info("Регион с ID {} успешно обновлён. Новое наименование: \"{}\"", region.getId(), region.getName());
     }
+
 
     @CacheEvict(value = {"regions", "region"}, allEntries = true, key = "#id")
     public void delete(Long id) {

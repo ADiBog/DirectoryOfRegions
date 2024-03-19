@@ -101,7 +101,10 @@ class RegionServiceTest {
     void updateShouldUpdateExistingRegion() {
         // GIVEN
         RegionDto updatedRegionDto = new RegionDto(1L, "UpdatedName", "UN");
+        Region existingRegion = new Region(1L, "ExistingName", "EN");
+        when(regionMapper.findById(updatedRegionDto.getId())).thenReturn(existingRegion);
         when(regionMapperDto.toEntity(updatedRegionDto)).thenReturn(new Region(1L, "UpdatedName", "UN"));
+
         ArgumentCaptor<Region> regionCaptor = ArgumentCaptor.forClass(Region.class);
 
         // WHEN
@@ -110,8 +113,12 @@ class RegionServiceTest {
         // THEN
         verify(regionMapper).update(regionCaptor.capture());
         Region capturedRegion = regionCaptor.getValue();
+
         assertEquals("UpdatedName", capturedRegion.getName());
+        assertEquals("UN", capturedRegion.getShortName());
     }
+
+
 
     @Test
     void deleteShouldThrowExceptionWhenRecordNotFound() {
